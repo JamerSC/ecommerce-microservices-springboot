@@ -1,0 +1,21 @@
+
+# Java and Maven
+target/
+*.class
+*.jar
+!mvnw
+!mvnw.cmd
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+
+# Operating system
+.DS_Store
