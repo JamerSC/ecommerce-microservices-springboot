@@ -1,0 +1,4 @@
+package com.ecommerce.order.entity;
+
+public class Order {
+}
