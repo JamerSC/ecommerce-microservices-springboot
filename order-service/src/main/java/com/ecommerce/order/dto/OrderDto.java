@@ -3,7 +3,7 @@ package com.ecommerce.order.dto;
 import com.ecommerce.order.entity.OrderStatus;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 public class OrderDto {
 
@@ -15,11 +15,11 @@ public class OrderDto {
 
     private OrderStatus status;
 
-    private String createdBy;
+    private Long createdBy;
 
-    private Date createdAt;
+    private OffsetDateTime createdAt;
 
-    private String updatedBy;
+    private Long updatedBy;
 
-    private Date updatedAt;
+    private OffsetDateTime updatedAt;
 }
