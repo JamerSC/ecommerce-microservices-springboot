@@ -3,7 +3,9 @@ package com.ecommerce.order.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -13,6 +15,11 @@ import java.util.Date;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Order {
 
     @Id
@@ -38,6 +45,8 @@ public class Order {
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long createdBy;
 
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;;
 
     @LastModifiedBy
@@ -45,7 +54,6 @@ public class Order {
     private Long updatedBy;
 
     @LastModifiedDate
-    @LastModifiedBy
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;;
 }
