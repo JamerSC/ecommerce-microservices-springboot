@@ -1,12 +1,11 @@
 package com.ecommerce.product.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,8 +16,15 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "products")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Product name is required")
@@ -27,7 +33,6 @@ public class Product {
 
     @Column(length = 1000)
     private String description;
-
 
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.01",
@@ -52,7 +57,6 @@ public class Product {
     private Long updatedBy;
 
     @LastModifiedDate
-    @LastModifiedBy
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;;
 }
