@@ -32,7 +32,7 @@ public class ProductSpecification {
     }
 
     /* ===================== DATE RANGE ===================== */
-    public static Specification<Product> dateRange(
+    public static Specification<Product> dateBetween(
             LocalDate dateFrom,
             LocalDate dateTo
     ) {
