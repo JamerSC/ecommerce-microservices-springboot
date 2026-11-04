@@ -3,13 +3,20 @@ package com.ecommerce.order.service;
 import com.ecommerce.order.dto.OrderDto;
 import com.ecommerce.order.entity.Order;
 import com.ecommerce.order.repository.OrderRepository;
+import com.ecommerce.order.repository.OrderSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -17,7 +24,34 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     @Override
-    public List<OrderDto> getAllOrders() {
+    public Page<OrderDto> getAllOrders(
+            String search,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            Pageable pageable
+    ) {
+        log.debug("Fetching orders with search: {}, dateFrom: {}, dateTo: {}, pageable: {}", search, dateFrom, dateTo, pageable);
+
+        Specification<Order> spec = Specification.allOf(
+                OrderSpecification.search(search),
+                OrderSpecification.dateBetween(dateFrom, dateTo)
+        );
+
+        return orderRepository.findAll(spec, pageable)
+                .map(order -> new OrderDto(
+                        order.getId(),
+                        order.getCustomerId(),
+                        order.getTotalAmount(),
+                        order.getStatus(),
+                        order.getCreatedBy(),
+                        order.getCreatedAt(),
+                        order.getUpdatedBy(),
+                        order.getUpdatedAt()
+                ));
+    }
+
+    @Override
+    public List<OrderDto> getAllMockOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
                 .map(order -> new OrderDto(
