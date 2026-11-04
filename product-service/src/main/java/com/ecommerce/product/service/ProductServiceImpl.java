@@ -3,13 +3,20 @@ package com.ecommerce.product.service;
 import com.ecommerce.product.dto.ProductDto;
 import com.ecommerce.product.entity.Product;
 import com.ecommerce.product.repository.ProductRepository;
+import com.ecommerce.product.repository.ProductSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -17,7 +24,35 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public Page<ProductDto> getAllProducts(
+            String search,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            Pageable pageable
+    ) {
+        log.debug("Fetching products with search: {}, dateFrom: {}, dateTo: {}, pageable: {}", search, dateFrom, dateTo, pageable);
+
+        Specification<Product> spec = Specification.allOf(
+                ProductSpecification.search(search),
+                ProductSpecification.dateBetween(dateFrom, dateTo)
+        );
+
+        return productRepository.findAll(spec, pageable)
+                .map(product -> new ProductDto(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getPrice(),
+                        product.getStockQuantity(),
+                        product.getCreatedBy(),
+                        product.getCreatedAt(),
+                        product.getUpdatedBy(),
+                        product.getUpdatedAt()
+                ));
+    }
+
+    @Override
+    public List<ProductDto> getAllMockProducts() {
 
         List<Product> products = productRepository.findAll();
 
