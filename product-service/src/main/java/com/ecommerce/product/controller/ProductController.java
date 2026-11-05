@@ -1,8 +1,11 @@
 package com.ecommerce.product.controller;
 
+import com.ecommerce.product.dto.CreateProductDto;
 import com.ecommerce.product.dto.ProductDto;
+import com.ecommerce.product.dto.UpdateProductDto;
 import com.ecommerce.product.service.ProductService;
 import com.ecommerce.product.util.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,10 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,6 +44,62 @@ public class ProductController {
                 .success(true)
                 .message("Products retrieved successfully")
                 .data(orders)
+                .status(200)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductDto>> getProductById(@PathVariable Long id) {
+        ProductDto product = productService.getProductById(id);
+        return ResponseEntity.ok(ApiResponse.<ProductDto>builder()
+                .success(true)
+                .message("Product retrieved successfully")
+                .data(product)
+                .status(200)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<ApiResponse<ProductDto>> createProduct(
+            @Valid @RequestBody CreateProductDto productDto
+    ) {
+        ProductDto createdProduct = productService.createProduct(productDto);
+        return ResponseEntity.ok(ApiResponse.<ProductDto>builder()
+                .success(true)
+                .message("Product created successfully")
+                .data(createdProduct)
+                .status(201)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductDto>> updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateProductDto productDto
+    ) {
+        ProductDto updatedProduct = productService.updateProduct(id, productDto);
+        return ResponseEntity.ok(ApiResponse.<ProductDto>builder()
+                .success(true)
+                .message("Product updated successfully")
+                .data(updatedProduct)
+                .status(200)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .success(true)
+                .message("Product deleted successfully")
                 .status(200)
                 .timestamp(java.time.LocalDateTime.now())
                 .build()
