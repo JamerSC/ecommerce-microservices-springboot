@@ -1,6 +1,8 @@
 package com.ecommerce.product.service;
 
+import com.ecommerce.product.dto.CreateProductDto;
 import com.ecommerce.product.dto.ProductDto;
+import com.ecommerce.product.dto.UpdateProductDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,9 +22,9 @@ public interface ProductService {
 
     ProductDto getProductById(Long id);
 
-    ProductDto createProduct(ProductDto productDto);
+    ProductDto createProduct(CreateProductDto productDto);
 
-    ProductDto updateProduct(Long id, ProductDto productDto);
+    ProductDto updateProduct(Long id, UpdateProductDto productDto);
 
     void deleteProduct(Long id);
 }
