@@ -1,6 +1,8 @@
 package com.ecommerce.order.service;
 
+import com.ecommerce.order.dto.CreateOrderDto;
 import com.ecommerce.order.dto.OrderDto;
+import com.ecommerce.order.dto.UpdateOrderDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,9 +23,9 @@ public interface OrderService {
 
     OrderDto getOrderById(Long orderId);
 
-    OrderDto createOrder(OrderDto orderDto);
+    OrderDto createOrder(CreateOrderDto orderDto);
 
-    OrderDto updateOrder(Long orderId, OrderDto orderDto);
+    OrderDto updateOrder(Long orderId, UpdateOrderDto orderDto);
 
     void deleteOrder(Long orderId);
 }

@@ -1,8 +1,11 @@
 package com.ecommerce.order.controller;
 
+import com.ecommerce.order.dto.CreateOrderDto;
 import com.ecommerce.order.dto.OrderDto;
+import com.ecommerce.order.dto.UpdateOrderDto;
 import com.ecommerce.order.service.OrderService;
 import com.ecommerce.order.util.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,10 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,6 +40,62 @@ public class OrderController {
                 .success(true)
                 .message("Orders retrieved successfully")
                 .data(orders)
+                .status(200)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<OrderDto>> getOrderById(@PathVariable Long id) {
+        OrderDto order = orderService.getOrderById(id);
+        return ResponseEntity.ok(ApiResponse.<OrderDto>builder()
+                .success(true)
+                .message("Order retrieved successfully")
+                .data(order)
+                .status(200)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<ApiResponse<OrderDto>> createOrder(
+            @Valid @RequestBody CreateOrderDto orderDto
+    ) {
+        OrderDto createdOrder = orderService.createOrder(orderDto);
+        return ResponseEntity.ok(ApiResponse.<OrderDto>builder()
+                .success(true)
+                .message("Product created successfully")
+                .data(createdOrder)
+                .status(201)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<OrderDto>> updateOrder(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateOrderDto orderDto
+    ) {
+        OrderDto updatedOrder = orderService.updateOrder(id, orderDto);
+        return ResponseEntity.ok(ApiResponse.<OrderDto>builder()
+                .success(true)
+                .message("Order updated successfully")
+                .data(updatedOrder)
+                .status(200)
+                .timestamp(java.time.LocalDateTime.now())
+                .build()
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .success(true)
+                .message("Order deleted successfully")
                 .status(200)
                 .timestamp(java.time.LocalDateTime.now())
                 .build()

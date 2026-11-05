@@ -26,13 +26,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Customer ID is required")
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    @NotNull(message = "Total amount is required")
-    @DecimalMin(value = "0.00",
-            message = "Total amount cannot be negative")
     @Column(name = "total_amount",
             nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount;

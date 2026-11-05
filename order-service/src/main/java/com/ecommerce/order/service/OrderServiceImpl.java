@@ -1,6 +1,8 @@
 package com.ecommerce.order.service;
 
+import com.ecommerce.order.dto.CreateOrderDto;
 import com.ecommerce.order.dto.OrderDto;
+import com.ecommerce.order.dto.UpdateOrderDto;
 import com.ecommerce.order.entity.Order;
 import com.ecommerce.order.repository.OrderRepository;
 import com.ecommerce.order.repository.OrderSpecification;
@@ -13,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -22,6 +25,8 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    public static final Long DEFAULT_USER_ID = 1L; // Replace with actual user ID retrieval logic
+    public static final OffsetDateTime DEFAULT_TIMESTAMP = OffsetDateTime.now(); // Replace with actual timestamp retrieval logic
 
     @Override
     public Page<OrderDto> getAllOrders(
@@ -84,15 +89,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto createOrder(OrderDto orderDto) {
+    public OrderDto createOrder(CreateOrderDto orderDto) {
         Order order = new Order();
         order.setCustomerId(orderDto.getCustomerId());
         order.setTotalAmount(orderDto.getTotalAmount());
         order.setStatus(orderDto.getStatus());
-        order.setCreatedBy(orderDto.getCreatedBy());
-        order.setCreatedAt(orderDto.getCreatedAt());
-        order.setUpdatedBy(orderDto.getUpdatedBy());
-        order.setUpdatedAt(orderDto.getUpdatedAt());
+        order.setCreatedBy(DEFAULT_USER_ID);
+        order.setCreatedAt(DEFAULT_TIMESTAMP);
+        order.setUpdatedBy(DEFAULT_USER_ID);
+        order.setUpdatedAt(DEFAULT_TIMESTAMP);
+
         orderRepository.save(order);
         return new OrderDto(
                 order.getId(),
@@ -107,14 +113,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto updateOrder(Long orderId, OrderDto orderDto) {
+    public OrderDto updateOrder(Long orderId, UpdateOrderDto orderDto) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
         order.setCustomerId(orderDto.getCustomerId());
         order.setTotalAmount(orderDto.getTotalAmount());
         order.setStatus(orderDto.getStatus());
-        order.setUpdatedBy(orderDto.getUpdatedBy());
-        order.setUpdatedAt(orderDto.getUpdatedAt());
+        order.setUpdatedBy(DEFAULT_USER_ID);
+        order.setUpdatedAt(DEFAULT_TIMESTAMP);
         orderRepository.save(order);
         return new OrderDto(
                 order.getId(),
