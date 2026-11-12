@@ -1,12 +1,11 @@
 package com.ecommerce.user.service;
 
-import com.ecommerce.user.dto.CreateUserDto;
-import com.ecommerce.user.dto.UpdateUserDto;
+import com.ecommerce.user.dto.UserCreateDto;
+import com.ecommerce.user.dto.UserUpdateDto;
 import com.ecommerce.user.dto.UserDto;
 import com.ecommerce.user.dto.UserListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,11 +21,11 @@ public interface UserService {
 
     List<UserListDto> getAllMockUsers();
 
-    UserDto getUserById(Long userId);
+    UserDto getUserById(Long id);
 
-    UserDto createUser(CreateUserDto userDto);
+    UserDto createUser(UserCreateDto userDto);
 
-    UserDto updateUser(Long userId, UpdateUserDto userDto);
+    UserDto updateUser(Long id, UserUpdateDto userDto);
 
-    void deleteUser(Long userId);
+    void deleteUser(Long id);
 }

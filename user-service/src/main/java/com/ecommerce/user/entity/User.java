@@ -42,12 +42,6 @@ public class User {
     @Column(nullable = false)
     private String password; // hashed password
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;  // default true
-
-    @Column(name = "is_admin", nullable = false)
-    private Boolean isAdmin = false;  // default false
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}) // CascadeType.PERSIST
     @JoinTable(
             name = "user_roles",
@@ -55,6 +49,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;  // default true
+
+    @Column(name = "is_admin", nullable = false)
+    private Boolean isAdmin = false;  // default false
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
