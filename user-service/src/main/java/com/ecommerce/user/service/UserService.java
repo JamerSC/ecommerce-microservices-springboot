@@ -1,9 +1,9 @@
 package com.ecommerce.user.service;
 
-import com.ecommerce.user.dto.UserCreateDto;
-import com.ecommerce.user.dto.UserUpdateDto;
-import com.ecommerce.user.dto.UserDto;
-import com.ecommerce.user.dto.UserListDto;
+import com.ecommerce.user.dto.user.UserCreateDto;
+import com.ecommerce.user.dto.user.UserUpdateDto;
+import com.ecommerce.user.dto.user.UserDto;
+import com.ecommerce.user.dto.user.UserListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

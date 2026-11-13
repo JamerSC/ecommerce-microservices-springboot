@@ -1,6 +1,6 @@
 package com.ecommerce.user.service;
 
-import com.ecommerce.user.dto.*;
+import com.ecommerce.user.dto.user.*;
 import com.ecommerce.user.entity.User;
 import com.ecommerce.user.repository.UserRepository;
 import com.ecommerce.user.repository.UserSpecification;
