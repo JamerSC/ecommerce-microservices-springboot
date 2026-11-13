@@ -1,6 +1,6 @@
 package com.ecommerce.user.controller;
 
-import com.ecommerce.user.dto.UserListDto;
+import com.ecommerce.user.dto.user.UserListDto;
 import com.ecommerce.user.service.UserService;
 import com.ecommerce.user.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
