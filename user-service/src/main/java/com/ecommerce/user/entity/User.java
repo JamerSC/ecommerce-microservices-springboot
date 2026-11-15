@@ -1,10 +1,7 @@
 package com.ecommerce.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,19 +15,20 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(name = "middle_name")
     private String middleName;
 
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(unique = true, nullable = false)
@@ -56,16 +54,16 @@ public class User {
     @Column(name = "is_admin", nullable = false)
     private Boolean isAdmin = false;  // default false
 
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user_id", referencedColumnName = "id")
     private User createdBy;
 
+    @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
-    @Column(nullable = false)
     private OffsetDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

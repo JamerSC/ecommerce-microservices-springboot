@@ -71,10 +71,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Build Spring Security's built-in UserDetails implementation.
         // This object contains the user's username, encoded password,
         // and all assigned roles and permissions.
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                authorities
-        );
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(),
+//                user.getPassword(),
+//                authorities
+//        );
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(authorities)
+                .disabled(!Boolean.TRUE.equals(user.getIsActive()))
+                .build();
     }
 }

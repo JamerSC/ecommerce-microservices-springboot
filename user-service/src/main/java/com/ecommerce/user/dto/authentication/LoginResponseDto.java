@@ -1,14 +1,16 @@
 package com.ecommerce.user.dto.authentication;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
 
+@Builder
 @Data
 public class LoginResponseDto {
     private String fullName;
     private String username;
-    private String jobTitle;
+//    private String jobTitle;
     private Boolean isActive;
     private Boolean isAdmin;
     private Set<String> roles;
