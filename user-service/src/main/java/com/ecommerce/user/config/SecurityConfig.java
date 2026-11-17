@@ -45,17 +45,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // explicitly allow all CORS configurations
                 .cors(Customizer.withDefaults())
-                // Disable CSRF (Stateless APIs don't need it)
                 .csrf(AbstractHttpConfigurer::disable)
-                // configure session management to be stateless
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS
                 ))
-                // Configure endpoint access rules
                 .authorizeHttpRequests(auth -> auth
-                        // auth
                         .requestMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
@@ -65,16 +60,48 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(customAuthenticationEntryPoint)  // unauthenticated
-                        .accessDeniedHandler(customAccessDeniedHandler)            // unauthorized
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                // add custom JWT filter before the default spring security filters
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .httpBasic(Customizer.withDefaults())
                 .userDetailsService(customUserDetailsService);
 
         return http.build();
     }
+
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                // explicitly allow all CORS configurations
+//                .cors(Customizer.withDefaults())
+//                // Disable CSRF (Stateless APIs don't need it)
+//                .csrf(AbstractHttpConfigurer::disable)
+//                // configure session management to be stateless
+//                .sessionManagement(session -> session.sessionCreationPolicy(
+//                        SessionCreationPolicy.STATELESS
+//                ))
+//                // Configure endpoint access rules
+//                .authorizeHttpRequests(auth -> auth
+//                        // auth
+//                        .requestMatchers(
+//                                "/swagger-ui.html",
+//                                "/swagger-ui/**",
+//                                "/api/v1/docs/**",
+//                                "/api/ecommerce/authentications/login")
+//                        .permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .exceptionHandling(ex -> ex
+//                        .authenticationEntryPoint(customAuthenticationEntryPoint)  // unauthenticated
+//                        .accessDeniedHandler(customAccessDeniedHandler)            // unauthorized
+//                )
+//                // add custom JWT filter before the default spring security filters
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .httpBasic(Customizer.withDefaults())
+//                .userDetailsService(customUserDetailsService);
+//
+//        return http.build();
+//    }
 
     // Explicit CorsConfigurationSource Bean
     @Bean

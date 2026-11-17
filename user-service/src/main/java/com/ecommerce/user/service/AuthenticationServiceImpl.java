@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -73,16 +74,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.info("Login response {}", responseDto);
             return responseDto;
 
+//        } catch (AuthenticationException ex) {
+//
+//            log.warn("Authentication failed for: {}", dto.getUsername());
+//
+//            log.error(
+//                    "Authentication failed. Username: {}, Exception: {}, Message: {}",
+//                    dto.getUsername(),
+//                    ex.getClass().getSimpleName(),
+//                    ex.getMessage()
+//            );
+//            throw new BadCredentialsException("Invalid username or password");
+//        }
+        } catch (DisabledException ex) {
+            log.warn("Login blocked — account is disabled for user: {}", dto.getUsername());
+            throw ex;
         } catch (AuthenticationException ex) {
-
-            log.warn("Authentication failed for: {}", dto.getUsername());
-
-            log.error(
-                    "Authentication failed. Username: {}, Exception: {}, Message: {}",
-                    dto.getUsername(),
-                    ex.getClass().getSimpleName(),
-                    ex.getMessage()
-            );
+            log.error("Authentication failed. Username: {}, Exception: {}, Message: {}",
+                    dto.getUsername(), ex.getClass().getSimpleName(), ex.getMessage());
             throw new BadCredentialsException("Invalid username or password");
         }
     }
