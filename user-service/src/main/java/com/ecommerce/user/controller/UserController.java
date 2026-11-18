@@ -1,5 +1,6 @@
 package com.ecommerce.user.controller;
 
+import com.ecommerce.user.dto.user.UserCreateDto;
 import com.ecommerce.user.dto.user.UserDto;
 import com.ecommerce.user.dto.user.UserListDto;
 import com.ecommerce.user.dto.user.UserUpdateDto;
@@ -39,51 +40,53 @@ public class UserController {
         Page<UserListDto> users = userService.getAllUsers(search, dateFrom, dateTo, pageable);
         return ResponseEntity.ok(ApiResponse.<Page<UserListDto>>builder()
                 .success(true)
-                .message("Users fetched successfully.")
+                .message("Users retrieved successfully.")
+                .data(users)
                 .status(200)
                 .timestamp(OffsetDateTime.now())
                 .build());
-
+    }
 
 //        @PreAuthorize("hasAuthority('CREATE_USERS')")
 //        @PostMapping("/{employeeId}/create-user")
-        @PostMapping("/")
-        public ResponseEntity<ApiResponse<UserDto>> createUser(
-                @Valid @RequestBody UserCreateDto dto) {
-            UserDto createdUser = userService.createUser(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserDto>builder()
-                    .success(true)
-                    .message("User created successfully!")
-                    .data(createdUser)
-                    .status(HttpStatus.CREATED.value())
-                    .timestamp(OffsetDateTime.now())
-                    .build());
-        }
+    @PostMapping("/")
+    public ResponseEntity<ApiResponse<UserDto>> createUser(
+            @Valid @RequestBody UserCreateDto dto)
+    {
+        UserDto createdUser = userService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserDto>builder()
+                .success(true)
+                .message("User created successfully!")
+                .data(createdUser)
+                .status(HttpStatus.CREATED.value())
+                .timestamp(OffsetDateTime.now())
+                .build());
+    }
 
 //        @PreAuthorize("hasAuthority('UPDATE_USERS')")
-        @PatchMapping("/{id}")
-        public ResponseEntity<ApiResponse<UserDto>> updateUser(
-                @PathVariable Long id, UserUpdateDto dto) {
-            UserDto updatedUser = userService.updateUser(id, dto);
-            return ResponseEntity.ok(ApiResponse.<UserDto>builder()
-                    .success(true)
-                    .message("User updated successfully!")
-                    .data(updatedUser)
-                    .status(HttpStatus.OK.value())
-                    .timestamp(OffsetDateTime.now())
-                    .build());
-        }
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserDto>> updateUser(
+            @PathVariable Long id, UserUpdateDto dto)
+    {
+        UserDto updatedUser = userService.updateUser(id, dto);
+        return ResponseEntity.ok(ApiResponse.<UserDto>builder()
+                .success(true)
+                .message("User updated successfully!")
+                .data(updatedUser)
+                .status(HttpStatus.OK.value())
+                .timestamp(OffsetDateTime.now())
+                .build());
+    }
 
-        @DeleteMapping("/{id}")
-        public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
-            userService.deleteUser(id);
-            return ResponseEntity.ok(ApiResponse.<Void>builder()
-                    .success(true)
-                    .message("User deleted successfully!")
-                    .data(null)
-                    .status(HttpStatus.OK.value())
-                    .timestamp(OffsetDateTime.now())
-                    .build());
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .success(true)
+                .message("User deleted successfully!")
+                .data(null)
+                .status(HttpStatus.OK.value())
+                .timestamp(OffsetDateTime.now())
+                .build());
     }
 }

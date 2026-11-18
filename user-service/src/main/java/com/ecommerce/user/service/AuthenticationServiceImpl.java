@@ -57,7 +57,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             LoginResponseDto responseDto = LoginResponseDto.builder()
                     .fullName(user.getFullName())
                     .username(user.getUsername())
-//                    .jobTitle(user.getJobTitle())
                     .isActive(user.getIsActive())
                     .isAdmin(user.getIsAdmin())
                     .roles(user.getRoles().stream().map(Role::getName).collect(java.util.stream.Collectors.toSet()))
@@ -74,26 +73,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.info("Login response {}", responseDto);
             return responseDto;
 
-//        } catch (AuthenticationException ex) {
-//
-//            log.warn("Authentication failed for: {}", dto.getUsername());
-//
-//            log.error(
-//                    "Authentication failed. Username: {}, Exception: {}, Message: {}",
-//                    dto.getUsername(),
-//                    ex.getClass().getSimpleName(),
-//                    ex.getMessage()
-//            );
-//            throw new BadCredentialsException("Invalid username or password");
-//        }
-        } catch (DisabledException ex) {
-            log.warn("Login blocked — account is disabled for user: {}", dto.getUsername());
-            throw ex;
         } catch (AuthenticationException ex) {
-            log.error("Authentication failed. Username: {}, Exception: {}, Message: {}",
-                    dto.getUsername(), ex.getClass().getSimpleName(), ex.getMessage());
+
+            log.warn("Authentication failed for: {}", dto.getUsername());
+
+            log.error(
+                    "Authentication failed. Username: {}, Exception: {}, Message: {}",
+                    dto.getUsername(),
+                    ex.getClass().getSimpleName(),
+                    ex.getMessage()
+            );
             throw new BadCredentialsException("Invalid username or password");
         }
+//        } catch (DisabledException ex) {
+//            log.warn("Login blocked — account is disabled for user: {}", dto.getUsername());
+//            throw ex;
+//        } catch (AuthenticationException ex) {
+//            log.error("Authentication failed. Username: {}, Exception: {}, Message: {}",
+//                    dto.getUsername(), ex.getClass().getSimpleName(), ex.getMessage());
+//            throw new BadCredentialsException("Invalid username or password");
+//        }
     }
 
     @Override
