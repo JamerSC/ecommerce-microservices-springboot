@@ -23,13 +23,16 @@ public class CustomAuthenticationEntryPoint implements org.springframework.secur
                          AuthenticationException authException) throws IOException, ServletException {
         ApiResponse<String> apiResponse = ApiResponse.<String>builder()
                 .success(false)
-                .message("You are not authenticated! Please login first.")
+                .message(authException.getMessage() != null
+                        ? authException.getMessage()
+                        : "You are not authenticated! Please login first.")
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .timestamp(OffsetDateTime.now())
                 .build();
 
         response.setContentType("application/json");
-        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        response.setStatus(HttpStatus.FORBIDDEN.value());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
