@@ -1,5 +1,6 @@
 package com.ecommerce.user.service;
 
+import com.ecommerce.user.dto.authentication.ChangePasswordDto;
 import com.ecommerce.user.dto.authentication.LoginRequestDto;
 import com.ecommerce.user.dto.authentication.LoginResponseDto;
 import com.ecommerce.user.entity.Permission;
@@ -31,7 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 //    private final AuthMapper authMapper;
-//    private final SecurityService securityService;
+    private final SecurityService securityService;
 
     @Override
     public LoginResponseDto login(LoginRequestDto dto) {
@@ -98,5 +99,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void logout() {
         SecurityContextHolder.clearContext();
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto dto, Authentication authentication) {
+        User currentUser = securityService.getUser(authentication);
+
+        // check the new & confirm password if match
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new RuntimeException("New password & confirm password does not match. Please try again");
+        }
+
+        // check old password
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), currentUser.getPassword())) {
+            throw new RuntimeException("Your current password does not match");
+        }
+
+        // hashed and set new password
+        String newHashedPassword = passwordEncoder.encode(dto.getNewPassword());
+
+        currentUser.setPassword(newHashedPassword);
+        currentUser.setUpdatedBy(currentUser);
+
+        // save user changed password
+        userRepository.save(currentUser);
     }
 }
