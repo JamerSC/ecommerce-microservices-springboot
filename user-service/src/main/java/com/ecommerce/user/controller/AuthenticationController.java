@@ -1,5 +1,6 @@
 package com.ecommerce.user.controller;
 
+import com.ecommerce.user.dto.authentication.ChangePasswordDto;
 import com.ecommerce.user.dto.authentication.LoginRequestDto;
 import com.ecommerce.user.dto.authentication.LoginResponseDto;
 import com.ecommerce.user.service.AuthenticationService;
@@ -8,10 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
 
@@ -44,6 +43,21 @@ public class AuthenticationController {
         ApiResponse<String> response = ApiResponse.<String>builder()
                 .success(true)
                 .message("User logged out successfully!")
+                .status(HttpStatus.OK.value())
+                .timestamp(OffsetDateTime.now())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+//    @PreAuthorize("hasAuthority('CHANGE_ACCOUNT_PASSWORD')")
+    @PatchMapping("/me/change-password")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            @Valid @RequestBody ChangePasswordDto dto, Authentication authentication) {
+        authenticationService.changePassword(dto, authentication);
+        ApiResponse<String> response = ApiResponse.<String>builder()
+                .success(true)
+                .message("Password changed successfully!")
                 .status(HttpStatus.OK.value())
                 .timestamp(OffsetDateTime.now())
                 .build();
