@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -51,9 +52,9 @@ public class UserController {
 //        @PostMapping("/{employeeId}/create-user")
     @PostMapping("/")
     public ResponseEntity<ApiResponse<UserDto>> createUser(
-            @Valid @RequestBody UserCreateDto dto)
+            @Valid @RequestBody UserCreateDto dto, Authentication auth)
     {
-        UserDto createdUser = userService.createUser(dto);
+        UserDto createdUser = userService.createUser(dto, auth);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserDto>builder()
                 .success(true)
                 .message("User created successfully!")
@@ -66,9 +67,9 @@ public class UserController {
 //        @PreAuthorize("hasAuthority('UPDATE_USERS')")
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<UserDto>> updateUser(
-            @PathVariable Long id, UserUpdateDto dto)
+            @PathVariable Long id, UserUpdateDto dto, Authentication auth)
     {
-        UserDto updatedUser = userService.updateUser(id, dto);
+        UserDto updatedUser = userService.updateUser(id, dto, auth);
         return ResponseEntity.ok(ApiResponse.<UserDto>builder()
                 .success(true)
                 .message("User updated successfully!")

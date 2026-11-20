@@ -6,6 +6,7 @@ import com.ecommerce.user.dto.user.UserDto;
 import com.ecommerce.user.dto.user.UserListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,9 +24,16 @@ public interface UserService {
 
     UserDto getUserById(Long id);
 
-    UserDto createUser(UserCreateDto userDto);
+    UserDto createUser(
+            UserCreateDto dto,
+            Authentication authentication
+    );
 
-    UserDto updateUser(Long id, UserUpdateDto userDto);
+    UserDto updateUser(
+            Long id,
+            UserUpdateDto dto,
+            Authentication authentication
+    );
 
     void deleteUser(Long id);
 }

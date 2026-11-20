@@ -12,6 +12,12 @@ public interface UserRepository extends
         JpaRepository<User, Long>,
         JpaSpecificationExecutor<User>
 {
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    Optional<User> findByEmail(String email);
+
     @Query("SELECT u FROM User u " +
             "LEFT JOIN FETCH u.roles r " +
             "LEFT JOIN FETCH r.permissions " +

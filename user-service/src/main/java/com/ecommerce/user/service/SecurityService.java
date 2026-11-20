@@ -17,9 +17,10 @@ public class SecurityService {
 
     private final UserRepository userRepository;
 
-    public User getUser(Authentication authentication) {
+    public User getUserAuthentication(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 //        log.info("User details: {}", userDetails);
+        assert userDetails != null;
         return userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> {
                     log.error("Authenticated user not found with username: {}", userDetails.getUsername());

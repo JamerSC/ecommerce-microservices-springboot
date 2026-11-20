@@ -1,19 +1,31 @@
 package com.ecommerce.user.dto.user;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 import java.util.Set;
 
 @Data
 public class UserCreateDto {
 
-    private Boolean isActive;
+    @NotBlank(message = "First name is required")
+    private String firstName;
 
-    private Boolean isAdmin;
+    private String middleName;
+
+    @NotBlank(message = "Last name is required")
+    private String lastName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email address")
+    private String email;
+
+    @NotBlank(message = "Username is required")
+    private String username;
+
+    private Boolean isActive = true;
+
+    private Boolean isAdmin = false;
 
     @NotNull(message = "Select user roles")
     private Set<Long> roleIds;
