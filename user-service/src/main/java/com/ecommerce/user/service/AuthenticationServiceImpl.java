@@ -6,14 +6,14 @@ import com.ecommerce.user.dto.authentication.LoginResponseDto;
 import com.ecommerce.user.entity.Permission;
 import com.ecommerce.user.entity.Role;
 import com.ecommerce.user.entity.User;
+import com.ecommerce.user.exception.UnauthorizedAuthException;
+import com.ecommerce.user.exception.InvalidRequestException;
 import com.ecommerce.user.repository.UserRepository;
 import com.ecommerce.user.security.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -84,16 +84,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     ex.getClass().getSimpleName(),
                     ex.getMessage()
             );
-            throw new BadCredentialsException("Invalid username or password");
+            throw new UnauthorizedAuthException("Invalid username or password");
         }
-//        } catch (DisabledException ex) {
-//            log.warn("Login blocked — account is disabled for user: {}", dto.getUsername());
-//            throw ex;
-//        } catch (AuthenticationException ex) {
-//            log.error("Authentication failed. Username: {}, Exception: {}, Message: {}",
-//                    dto.getUsername(), ex.getClass().getSimpleName(), ex.getMessage());
-//            throw new BadCredentialsException("Invalid username or password");
-//        }
     }
 
     @Override
@@ -103,16 +95,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void changePassword(ChangePasswordDto dto, Authentication authentication) {
-        User currentUser = securityService.getUser(authentication);
+        User currentUser = securityService.getUserAuthentication(authentication);
 
         // check the new & confirm password if match
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-            throw new RuntimeException("New password & confirm password does not match. Please try again");
+            throw new InvalidRequestException("New password & confirm password does not match. Please try again");
         }
 
         // check old password
         if (!passwordEncoder.matches(dto.getCurrentPassword(), currentUser.getPassword())) {
-            throw new RuntimeException("Your current password does not match");
+            throw new InvalidRequestException("Your current password does not match");
         }
 
         // hashed and set new password
