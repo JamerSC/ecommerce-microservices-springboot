@@ -4,6 +4,7 @@ import com.ecommerce.order.dto.CreateOrderDto;
 import com.ecommerce.order.dto.OrderDto;
 import com.ecommerce.order.dto.UpdateOrderDto;
 import com.ecommerce.order.entity.Order;
+import com.ecommerce.order.exception.ResourceNotFoundException;
 import com.ecommerce.order.repository.OrderRepository;
 import com.ecommerce.order.repository.OrderSpecification;
 import jakarta.transaction.Transactional;
@@ -75,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
         return new OrderDto(
                 order.getId(),
                 order.getCustomerId(),
@@ -115,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto updateOrder(Long orderId, UpdateOrderDto orderDto) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
         order.setCustomerId(orderDto.getCustomerId());
         order.setTotalAmount(orderDto.getTotalAmount());
         order.setStatus(orderDto.getStatus());
