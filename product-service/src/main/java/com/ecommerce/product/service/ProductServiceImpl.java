@@ -4,6 +4,7 @@ import com.ecommerce.product.dto.CreateProductDto;
 import com.ecommerce.product.dto.ProductDto;
 import com.ecommerce.product.dto.UpdateProductDto;
 import com.ecommerce.product.entity.Product;
+import com.ecommerce.product.exception.ResourceNotFoundException;
 import com.ecommerce.product.repository.ProductRepository;
 import com.ecommerce.product.repository.ProductSpecification;
 import jakarta.transaction.Transactional;
@@ -79,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         return new ProductDto(
                 product.getId(),
                 product.getName(),
@@ -123,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(Long id, UpdateProductDto productDto) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
