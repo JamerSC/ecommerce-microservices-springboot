@@ -21,8 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceImplTest {
@@ -119,8 +118,8 @@ public class OrderServiceImplTest {
         // assert
         assertNotNull(result);
         assertEquals(1L, result.getCustomerId());
-        assertEquals(OrderStatus.PROCESSING, dto.getStatus());
-        assertEquals(BigDecimal.valueOf(100), dto.getTotalAmount());
+        assertEquals(OrderStatus.PROCESSING, result.getStatus());
+        assertEquals(BigDecimal.valueOf(100), result.getTotalAmount());
 
         verify(orderRepository).save(any(Order.class));
     }
@@ -142,7 +141,6 @@ public class OrderServiceImplTest {
 
         // update order
         UpdateOrderDto dto = new UpdateOrderDto();
-
         dto.setCustomerId(99L);
         dto.setTotalAmount(BigDecimal.valueOf(200));
         dto.setStatus(OrderStatus.SHIPPED);
@@ -150,16 +148,44 @@ public class OrderServiceImplTest {
         when(orderRepository.findById(99L))
                 .thenReturn(Optional.of(existingOrder));
 
+        // Mock save()
+        when(orderRepository.save(any(Order.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
         // act
         OrderDto result = orderService.updateOrder(99L, dto);
 
         // assert
         assertNotNull(result);
         assertEquals(99L, result.getCustomerId());
-        assertEquals(OrderStatus.SHIPPED, dto.getStatus());
-        assertEquals(BigDecimal.valueOf(200), dto.getTotalAmount());
+        assertEquals(BigDecimal.valueOf(200), result.getTotalAmount());
+        assertEquals(OrderStatus.SHIPPED, result.getStatus());
 
+        verify(orderRepository).findById(99L);
         verify(orderRepository).save(existingOrder);
+    }
+
+    @Test
+    void updateOrder_ShouldThrowException_OrderProductDoesNotExist() {
+
+        // Arrange
+        Long orderId = 99L;
+
+        UpdateOrderDto dto = new UpdateOrderDto();
+
+        when(orderRepository.findById(orderId))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> orderService.updateOrder(orderId, dto)
+        );
+
+        verify(orderRepository).findById(orderId);
+
+        verify(orderRepository, never())
+                .save(any(Order.class));
     }
 
     // ==========================================
